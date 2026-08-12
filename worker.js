@@ -1,9 +1,6 @@
 const rss_url = "https://rss.itmedia.co.jp/rss/2.0/netlab.xml";
 const api_url = "https://jlp.yahooapis.jp/jsonrpc";
 
-let app_id = null;
-let bsky_username = null;
-let bsky_pass = null;
 const renge_lines = [
     "うちも${word}好きなのん",
     "${word}！？それ、${word}なん！？",
@@ -23,6 +20,12 @@ const renge_lines = [
     "${word}に元気を与えるのん"
 ];
 
+const env = {
+    YAHOO_APIKEY: process.env.YAHOO_APIKEY,
+    BSKY_USERNAME: process.env.BSKY_USERNAME,
+    BSKY_PASSWORD: process.env.BSKY_PASSWORD
+};
+
 async function getArticles() {
     try {
         const response = await fetch(rss_url, { cache: "no-store" }); //RSSからニュース一覧を取得
@@ -30,8 +33,7 @@ async function getArticles() {
             throw new Error(`status:${response.status}`);
         }
         const result = await response.text();
-        console.log(result);
-        await getTokens(result);
+        await getTokens(result, env);
     } catch (err) {
         console.log(err);
     }
@@ -43,11 +45,11 @@ async function getTokens(xml) {
         return;
     }
     const query = titles[1 + Math.floor(Math.random() * (titles.length - 1))].replace('<title>', '').replace('</title>', '');//タイトル全文を取得
-    console.log(query);
 
     try {
         const headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'User-Agent': `Yahoo AppID: ${env.YAHOO_APIKEY}`
         }
         const param = {
             id: 'nyanpass',
@@ -57,19 +59,17 @@ async function getTokens(xml) {
                 q: query
             }
         }
-        console.log(param);
 
         //Yahoo形態素解析から結果を取得
-        const response = await fetch(`${api_url}?appid=${app_id}`, {
+        const response = await fetch(api_url, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(param)
         });
         if (!response.ok) {
-            throw new Error(`status:${response.status}`);
+            throw new Error(`status:${response.status}, APIKEY:${env.YAHOO_APIKEY}, query:${query}`);
         }
         const result = await response.json();
-        console.log(result);
         let token = null;
         //条件に合うまでランダムに単語を選ぶ。300回やって見つからなかったらにゃんぱすーする
         for (let i=0; i<300; i++) {
@@ -87,7 +87,6 @@ async function getTokens(xml) {
 
         //テンプレートと合わせて文章を作る
         const text = renge_lines[Math.floor(Math.random() * renge_lines.length)].replaceAll("${word}", token[0]);
-        console.log(text)
         await post(text);//投稿する
     } catch (err) {
         console.log(err);
@@ -95,7 +94,6 @@ async function getTokens(xml) {
 }
 
 function chooseWord(word) {
-    console.log(word);
     if (!word[0]) {
         return false; //存在しない場合はfalseを返す
     }
@@ -107,7 +105,7 @@ function chooseWord(word) {
 }
 
 async function bskyOauth() {
-    if (!bsky_pass || !bsky_username) {
+    if (!env.BSKY_PASSWORD || !env.BSKY_USERNAME) {
         console.log('認証情報が不足しています。');
         return false;
     }
@@ -118,8 +116,8 @@ async function bskyOauth() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                identifier: bsky_username,
-                password: bsky_pass
+                identifier: env.BSKY_USERNAME,
+                password: env.BSKY_PASSWORD
             })
         });
 
@@ -149,7 +147,7 @@ async function post(msg) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                repo: bsky_username,
+                repo: env.BSKY_USERNAME,
                 collection: "app.bsky.feed.post",
                 record: {
                     text: msg,
@@ -164,16 +162,4 @@ async function post(msg) {
     }
 }
 
-export default {
-    async fetch(request, env, ctx) {
-        return new Response("nyanpasu!");
-    },
-    async scheduled(controller, env, ctx) {
-        app_id = env.YAHOO_APIKEY;
-        bsky_username = env.BSKY_USERNAME;
-        bsky_pass = env.BSKY_PASSWORD;
-        ctx.waitUntil(
-            getArticles()
-        );
-    }
-}
+getArticles();
