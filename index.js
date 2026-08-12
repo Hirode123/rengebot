@@ -97,7 +97,7 @@ function chooseWord(word) {
     if (!word[0]) {
         return false; //存在しない場合はfalseを返す
     }
-    if (word[0].length < 2 || Number(word[0]) || word[0].match(/地震|災害|死|殺|津波|災|テロ|爆|暴力|性|がん|病|戦|事故|襲/) || word[3] !== "名詞") {//短すぎるorアレな言葉or名詞じゃない場合はfalseを返す
+    if (word[0].length < 2 || Number(word[0]) || word[0].match(/震|死|殺|津波|災|テロ|爆|暴力|性|がん|病|戦|事故|襲/) || word[3] !== "名詞") {//短すぎるorアレな言葉or名詞じゃない場合はfalseを返す
         return false;
     } else {
         return true;
