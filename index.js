@@ -126,7 +126,8 @@ async function bskyOauth() {
             console.log('ログインに成功しました');
             return sessionData.accessJwt;
         } else {
-            console.log('ログインに失敗しました', env.BSKY_USERNAME, env.BSKY_PASSWORD, response.status);
+            const errorText = await response.text();
+            console.log('ログインに失敗しました', env.BSKY_USERNAME, env.BSKY_PASSWORD, response.status, errorText);
         }
     } catch (err) {
         console.log(err);
