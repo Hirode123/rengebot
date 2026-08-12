@@ -5,4 +5,4 @@
 
 Webサービス by Yahoo! JAPAN （https://developer.yahoo.co.jp/sitemap/ ）
 
-Special Thanks: cloudflare workersの使い方を教えてくれたchatGPT様
+Special Thanks: cloudflare workersからgithubへの移行を手伝ってくれたchatGPT様
