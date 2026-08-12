@@ -1,0 +1,25 @@
+name: Renge Bot Scheduled Job
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: node-js_setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: run_bot
+        env:
+          YAHOO_APIKEY: ${{ secrets.YAHOO_APIKEY }}
+          BSKY_USERNAME: ${{ secrets.BSKY_USERNAME }}
+          BSKY_PASSWORD: ${{ secrets.BSKY_PASSWORD }}
+        run: node index.js
