@@ -3,6 +3,29 @@ const env = {
     BSKY_USERNAME: process.env.BSKY_USERNAME,
     BSKY_PASSWORD: process.env.BSKY_PASSWORD
 };
+const renge_lines = [
+    "うちも${word}好きなのん",
+    "${word}！？それ、${word}なん！？",
+    "うち、${word}に住んでるのん...？",
+    "こいつの名前は${word}にするのん",
+    "こまちゃんも一緒に${word}するん！",
+    "こまちゃんも今朝の${word}観たのん？",
+    "${word}ほしいのん！",
+    "${word}って食べれるのん？",
+    "${word}食べたいのーん",
+    "うちも${word}食べてみたいん！",
+    "うちは${word}が熱いと思いますん！",
+    "${word}見つけたーん",
+    "${word}も罪なん...",
+    "${word}をナメてもらったら困りますん！",
+    "ほたるんも${word}するのん？",
+    "${word}に元気を与えるのん",
+    "うち、${word}に勝ちたいん！",
+    "${word}に勝ったのん！",
+    "${word}に負けましたん...",
+    "${word}とは永遠のライバルなん...",
+    "${word}がいっぱいなーん"
+];
 
 async function bskyOauth() {
     if (!env.BSKY_PASSWORD || !env.BSKY_USERNAME) {
@@ -73,7 +96,7 @@ async function selectword(timeline, session) {
     if (token === null) {
         token = "にゃんぱすー";
     }
-    console.log(token, text, JSON.stringify(tokens, null, 2));
+    await post(token, session);
 }
 
 async function getTokens(query) {
@@ -99,6 +122,34 @@ async function getTokens(query) {
     const result = await response.json();
 
     return result;
+}
+
+async function post(msg, session) {
+    try {
+        if (!session) {
+            return false;
+        }
+        //投稿する
+        const response = await fetch("https://bsky.social/xrpc/com.atproto.repo.createRecord", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${session}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                repo: env.BSKY_USERNAME,
+                collection: "app.bsky.feed.post",
+                record: {
+                    text: msg,
+                    createdAt: new Date().toISOString()
+                }
+            })
+        });
+        return;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
 }
 
 getTimeline();
