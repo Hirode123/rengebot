@@ -55,7 +55,6 @@ async function getTimeline() {
 }
 
 async function selectword(timeline, session) {
-    console.log(timeline.feed[0].post);
     let text = null;
     while (!text) {
         text = timeline.feed[Math.floor(Math.random() * timeline.feed.length)].post.record.text;
@@ -75,7 +74,7 @@ async function selectword(timeline, session) {
     } else {
         token = token[0];
     }
-    console.log(token, text, tokens);
+    console.log(token, text, JSON.stringify(tokens, null, 2));
 }
 
 async function getTokens(query) {
