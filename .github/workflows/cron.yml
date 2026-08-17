@@ -21,4 +21,4 @@ jobs:
           YAHOO_APIKEY: ${{ secrets.YAHOO_APIKEY }}
           BSKY_USERNAME: ${{ secrets.BSKY_USERNAME }}
           BSKY_PASSWORD: ${{ secrets.BSKY_PASSWORD }}
-        run: node index.js
+        run: node index_new.js
