@@ -62,12 +62,12 @@ async function selectword(timeline, session) {
     const tokens = await getTokens(text);
     let token = null;
     for (let i = 0; i < tokens.result.tokens.length; i++) {
-        token = tokens.result.tokens[i];
-        if (token[0].length < 2 || Number(token[0]) || token[0].match(/震|死|殺|病|症|害|爆|災|戦/) || token[3] !== "名詞") {
-            token = null;
+        const word = tokens.result.tokens[i];
+        if (word[0].length < 2 || Number(word[0]) || word[0].match(/震|死|殺|病|症|害|爆|災|戦/) || word[3] !== "名詞") {
             continue;
         }
-        token = token[0];
+        token = word[0];
+        break;
     }
 
     if (token === null) {
