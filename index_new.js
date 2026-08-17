@@ -74,7 +74,7 @@ async function selectword(timeline, session) {
         token = "にゃんぱすー";
     } else {
         token = token[0];
-    console.log(token);
+    console.log(token, text, tokens);
 }
 
 async function getTokens(query) {
