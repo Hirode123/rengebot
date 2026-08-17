@@ -74,6 +74,7 @@ async function selectword(timeline, session) {
         token = "にゃんぱすー";
     } else {
         token = token[0];
+    }
     console.log(token, text, tokens);
 }
 
