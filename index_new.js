@@ -95,6 +95,8 @@ async function selectword(timeline, session) {
 
     if (token === null) {
         token = "にゃんぱすー";
+    } else {
+        token = renge_lines[Math.floor(Math.random() * renge_lines.length)].replaceAll("${word}", token);
     }
     await post(token, session);
 }
