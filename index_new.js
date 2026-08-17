@@ -67,12 +67,11 @@ async function selectword(timeline, session) {
             token = null;
             continue;
         }
+        token = token[0];
     }
 
     if (token === null) {
         token = "にゃんぱすー";
-    } else {
-        token = token[0];
     }
     console.log(token, text, JSON.stringify(tokens, null, 2));
 }
