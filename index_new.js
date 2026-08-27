@@ -65,7 +65,7 @@ async function selectword(timeline, session) {
     let token = null;
     for (let i = 0; i < tokens.result.tokens.length; i++) {
         const word = tokens.result.tokens[i];
-        if (word[0].length < 2 || Number(word[0]) || word[0].match(/震|死|殺|病|症|害|爆|災|戦/) || word[3] !== "名詞") {
+        if (word[0].length < 2 || Number(word[0]) || word[0].match(/震|死|殺|病|症|害|爆|災|戦|今日|昨日/) || word[3] !== "名詞") {
             continue;
         }
         token = word[0];
