@@ -42,7 +42,7 @@ async function getTimeline() {
         return false;
     }
 
-    const response = await fetch("https://bsky.social/xrpc/app.bsky.feed.getFeed?feed=" + encodeURIComponent("at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot"),
+    const response = await fetch("https://bsky.social/xrpc/app.bsky.feed.searchPostsV2?languages=ja&query=%E3%81%82&limit=50&sort=recent&allTime=true"),
         {
             method: "GET",
             headers: {
