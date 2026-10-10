@@ -59,7 +59,7 @@ async function getTimeline() {
 async function selectword(timeline, session) {
     let text = null;
     while (!text) {
-        text = timeline.feed[Math.floor(Math.random() * timeline.feed.length)].post.record.text;
+        text = timeline.posts[Math.floor(Math.random() * timeline.posts.length)].record.text;
     }
     const tokens = await getTokens(text);
     let token = null;
